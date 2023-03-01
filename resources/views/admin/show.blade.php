@@ -16,6 +16,11 @@
                     {{$project->Nome_sviluppatore}} - {{$project->type->name}}
                 </div>
                 <div class="card-body">
+                    <div class="technologies">
+                        @foreach ($project->technologies as $technology)
+                            <span class="mx-1" style="color:{{$technology->color}};"> #{{$technology->name}} </span>
+                        @endforeach
+                    </div>
                     <h5 class="card-title">{{$project->Nome_progetto}}</h5>
                     <p class="card-text">{{$project->Descrizione_progetto}}</p>
                 </div>
