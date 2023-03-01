@@ -29,6 +29,15 @@
                 @endforeach
             </select>
         </div>
+        <div class="mb-3 d-flex justify-content-between">
+            @foreach ($technologies as $technology)
+            <div>
+                <input type="checkbox" class="form-check-input" name="technologies[]" value="{{$technology->id}}"
+                {{$project->technologies->contains($technology->id) ? 'checked' : ''}}>
+                <label class="form-check-label">{{$technology->name}}</label>
+            </div>                  
+            @endforeach
+        </div>
         <div class="mb-3">
             <label class="form-label">
                 Nome progetto
