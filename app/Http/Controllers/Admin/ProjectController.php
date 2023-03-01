@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -31,7 +32,8 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
-        return view('admin.create', compact('types'));
+        $technologies = Technology::all();
+        return view('admin.create', compact('types', 'technologies'));
     }
 
     /**
@@ -52,6 +54,7 @@ class ProjectController extends Controller
                 'Data_fine_progetto' => 'required',
                 'Immagine' => 'image',
                 'Nome_sviluppatore' => 'string|required|min:2|max:100',
+                'technologies' => 'array|exists:technologies,id',
             ],
             [
                 'Nome_progetto.required' => 'Il titolo è obbligatorio!!!',
@@ -84,6 +87,7 @@ class ProjectController extends Controller
         }
         $newProject->Nome_sviluppatore = $data['Nome_sviluppatore'];
         $newProject->save();
+        $newProject->technologies()->sync($data['technologies']);
 
 
         return redirect()->route('projects.index');
@@ -112,7 +116,8 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
         $types = Type::all();
-        return view('admin.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -125,7 +130,6 @@ class ProjectController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-
         $request->validate(
             [
                 'type_id' => 'required',
@@ -135,6 +139,7 @@ class ProjectController extends Controller
                 'Data_fine_progetto' => 'required',
                 'Immagine' => 'image',
                 'Nome_sviluppatore' => 'string|required|min:2|max:100',
+                'technologies' => 'array|exists:technologies,id',
             ],
             [
                 'Nome_progetto.required' => 'Il titolo è obbligatorio!!!',
@@ -166,6 +171,7 @@ class ProjectController extends Controller
         }
         $newProject->Nome_sviluppatore = $data['Nome_sviluppatore'];
         $newProject->save();
+        $newProject->technologies()->sync($data['technologies']);
 
         return redirect()->route('projects.show', $newProject->id);
     }
